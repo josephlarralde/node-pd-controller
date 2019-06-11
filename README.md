@@ -25,7 +25,7 @@ Pd.init('/Applications/Pd-0.49-1-x86_64.app/Contents/Resources/bin')
 });
 ```
 
-![](hello-pd-screenshot.png)
+![](hello-increment-screenshot.png)
 
 ## How it works
 
