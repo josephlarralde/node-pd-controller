@@ -16,14 +16,16 @@ const path = require('path');
 
 Pd.init('/Applications/Pd-0.49-1-x86_64.app/Contents/Resources/bin')
 .then(() => {
-    const myPatch = Pd.open(path.join(__dirname, 'test')); // patch name without '.pd' extension
+    const myPatch = Pd.open(path.join(__dirname, 'hello-increment')); // patch name without '.pd' extension
     myPatch.on('message', (msg) => {
         console.log(`pure data says ${msg}`);
     });
-    myPatch.send('coucou');
+    myPatch.send('hello', 1);
     Pd.close(myPatch);
 });
 ```
+
+![](hello-pd-screenshot.png)
 
 ## How it works
 

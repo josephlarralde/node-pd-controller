@@ -31,8 +31,7 @@ class Patch extends EventEmitter {
   send(...args) {
     let sendString = `send ${this.id}`;
     args.forEach((arg) => { sendString += ` ${arg}`; });
-    sendString += '\n';
-    console.log(sendString);
+    sendString += ';\n';
     this.pdsend.stdin.write(sendString);
   }
 }
@@ -41,7 +40,7 @@ class Patch extends EventEmitter {
 
 class Pd {
   // constructor(binFolder, pdOptions = [], sendPort = 3030, receivePort = 3031, tmpDir = 'tmp') {
-  static init(binFolder, pdOptions = [], sendPort = 3030, receivePort = 3031, tmpDir = 'tmp') {
+  static async init(binFolder, pdOptions = [], sendPort = 3030, receivePort = 3031, tmpDir = 'tmp') {
     this.binFolder = binFolder;
     this.pdOptions = pdOptions;
     this.sendPort = sendPort;
@@ -58,6 +57,8 @@ class Pd {
 
     const files = fs.readdirSync(this.tmpDir);
     files.forEach((file) => { fs.unlinkSync(path.join(this.tmpDir, file)); });
+
+    await this.start();
   }
 
   static async start() {
@@ -67,10 +68,6 @@ class Pd {
       //////////////////// PDSEND PROCESS
 
       this.pdsend = spawn(path.join(this.binFolder, 'pdsend'), [`${this.sendPort}`]);
-      this.pdsend.stdin.on('data', (data) => { console.log(`pdsend stdin : ${data}`); });
-      this.pdsend.stdout.on('data', (data) => { console.log(`pdsend stdout : ${data}`); });
-      this.pdsend.stderr.on('data', (data) => { console.log(`pdsend stderr : ${data}`); });
-
       resolve();
     });
   }
@@ -84,6 +81,7 @@ class Pd {
       //////////////////// PDRECEIVE PROCESS
 
       this.pdreceive = spawn(path.join(this.binFolder, 'pdreceive'), [`${this.receivePort}`]);
+
       this.pdreceive.stdout.on('data', (data) => {
         if (`${data}` === 'initialized;\n') {
           resolve();
@@ -91,12 +89,12 @@ class Pd {
           this._routeMessage(data);
         }
       });
+
       this.pdreceive.stderr.on('data', async (data) => {
         console.log(`pdreceive stderr : ${data}`);
         await this._sleep(5000);
         this.start().then(() => { resolve(); });
       });
-      this.pdreceive.stdin.on('data', (data) => { console.log(`pdreceive stdin : ${data}`); });
 
       //////////////////// PD PROCESS
 
@@ -115,7 +113,6 @@ class Pd {
 
       // print console output (yes, pd's console output goes to stderr !)
       this.pd.stderr.on('data', (data) => { console.log(`pd : ${data}`); });
-      this.pd.stdout.on('data', (data) => { /* do nothing */ });
     });
   }
 
@@ -125,7 +122,7 @@ class Pd {
     const filedir = path.dirname(fullPath);
     const filename = path.basename(fullPath);
     this.patches[id] = new Patch(id, this.pdsend);
-    this.pdsend.stdin.write(`open ${filename} ${filedir}\n`);
+    this.pdsend.stdin.write(`open ${filename} ${filedir};\n`);
 
     return this.patches[id];
   }
@@ -133,7 +130,6 @@ class Pd {
   static close(patch) {
     const id = patch.id;
     this.pdsend.stdin.write(`close ${id}.pd\n`);
-
   }
 
   static _routeMessage(msg) {
