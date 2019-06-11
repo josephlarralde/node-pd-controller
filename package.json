@@ -1,0 +1,21 @@
+{
+  "name": "pd-controller",
+  "version": "1.0.0",
+  "description": "quick and dirty pure data process manager",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "pure",
+    "data",
+    "pd",
+    "wrapper",
+    "audio",
+    "sound",
+    "patch"
+  ],
+  "repository": "https://github.com/josephlarralde/node-pd-controller.git",
+  "author": "joseph larralde",
+  "license": "BSD-3-Clause"
+}
