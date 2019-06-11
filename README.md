@@ -20,7 +20,7 @@ Pd.init('/Applications/Pd-0.49-1-x86_64.app/Contents/Resources/bin')
     myPatch.on('message', (msg) => {
         console.log(`pure data says ${msg}`);
     });
-    myPatch.send('hello', 1);
+    myPatch.send('hello', 1); // should print "pure data says hello,2" to the console
     Pd.close(myPatch);
 });
 ```
