@@ -118,9 +118,9 @@ class Pd {
   }
 
   static open(patchPath, ...args) {
-    const id = this.uuid; // `id-${Date.now()}`;
+    const id = `id-${this.uuid}`; // `id-${Date.now()}`;
     this.uuid++;
-    
+
     const fullPath = this._createPatchWrapper(patchPath, id, ...args);
     const filedir = path.dirname(fullPath);
     const filename = path.basename(fullPath);
