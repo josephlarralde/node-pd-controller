@@ -50,6 +50,7 @@ class Pd {
     this.pdreceive = null;
     this.patches = {};
     this.tmpDir = path.join(__dirname, tmpDir);
+    this.uuid = 0;
 
     if (!fs.existsSync(this.tmpDir)) {
       fs.mkdirSync(this.tmpDir);
@@ -117,8 +118,10 @@ class Pd {
   }
 
   static open(patchPath, ...args) {
-    const id = `id-${Date.now()}`;
-    const fullPath = this._createPatchWrapper(patchPath, id, args);
+    const id = this.uuid; // `id-${Date.now()}`;
+    this.uuid++;
+    
+    const fullPath = this._createPatchWrapper(patchPath, id, ...args);
     const filedir = path.dirname(fullPath);
     const filename = path.basename(fullPath);
     this.patches[id] = new Patch(id, this.pdsend);
@@ -129,7 +132,7 @@ class Pd {
 
   static close(patch) {
     const id = patch.id;
-    this.pdsend.stdin.write(`close ${id}.pd\n`);
+    this.pdsend.stdin.write(`close ${id}.pd;\n`);
   }
 
   static _routeMessage(msg) {
