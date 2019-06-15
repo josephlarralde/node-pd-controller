@@ -14,6 +14,7 @@ const path = require('path');
 // initialize Pd with the `bin` path of pure data
 // (where the `pd`, `pdsend`, and `pdreceive` binaries are located)
 
+// on linux this would be Pd.init('/usr/local/bin')
 Pd.init('/Applications/Pd-0.49-1-x86_64.app/Contents/Resources/bin')
 .then(() => {
     const myPatch = Pd.open(path.join(__dirname, 'hello-increment')); // patch name without '.pd' extension
@@ -25,7 +26,7 @@ Pd.init('/Applications/Pd-0.49-1-x86_64.app/Contents/Resources/bin')
 });
 ```
 
-![](hello-increment-screenshot.png)
+<img src="hello-increment-screenshot.png" alt="pure data patch" width="200"/>
 
 ## How it works
 
