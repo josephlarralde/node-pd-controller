@@ -26,7 +26,7 @@ Pd.init('/Applications/Pd-0.49-1-x86_64.app/Contents/Resources/bin')
 });
 ```
 
-<img src="hello-increment-screenshot.png" alt="pure data patch" width="200"/>
+<img src="hello-increment-screenshot.png" alt="pure data patch" width="500"/>
 
 ## How it works
 
