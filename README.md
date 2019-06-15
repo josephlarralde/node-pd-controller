@@ -35,6 +35,29 @@ When opening a patch, pd-controller creates a temporary wrapper .pd file and ass
 
 Each patch to be loaded with pd-controller must have an inlet to receive the data sent from the `send` method in nodejs, and an outlet to send messages which will be emitted as `message` events in nodejs.
 
+## Install pure data on raspbian
+
+Make sure you have the required packages installed
+
+```shell
+sudo apt-get update -y
+sudo apt-get upgrade -y
+sudo apt --fix-broken install -y
+sudo apt-get install -y build-essential autoconf automake libtool gettext git gcc g++ libasound2-dev libjack-jackd2-dev libfftw3-3 libfftw3-dev make tcl tk
+```
+
+Then download, compile and install pure data
+
+```shell
+wget http://msp.ucsd.edu/Software/pd-0.49-0.src.tar.gz
+tar -xzf pd-0.49-0.src.tar.gz
+cd pd-0.49-0
+./autogen.sh
+./configure --enable-jack --enable-fftw
+sudo make install
+cd ..
+```
+
 ## Caveats
 
 Sometimes, when pd-controller is initialized too many times in a short amount of time, the`pdsend` and `pdreceive` binaries cannot use the latest TCP port, maybe due to OS restrictions to prevent DDOS attacks. When this happens, the `Pd.init()` method tries to kill and respawn the binaries every 5 seconds until it succeeds (usually in less than 1 minute), then returns a resolved Promise.
