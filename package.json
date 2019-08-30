@@ -17,5 +17,8 @@
   ],
   "repository": "https://github.com/josephlarralde/node-pd-controller.git",
   "author": "joseph larralde",
-  "license": "BSD-3-Clause"
+  "license": "BSD-3-Clause",
+  "dependencies": {
+    "osc": "^2.3.1"
+  }
 }
