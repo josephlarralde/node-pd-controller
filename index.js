@@ -160,8 +160,8 @@ class Pd {
 
       // todo (backwards udp communication) :
       // this.osc.on('bundle', (oscBundle, timeTag, info) => {});
-      this.osc.on('ready', () => { console.log('udp ready'); resolve(); });
-      this.osc.on('error', (err) => { console.log('udp error'); reject(); });
+      this.osc.on('ready', () => { /* console.log('udp ready'); */ resolve(); });
+      this.osc.on('error', (err) => { /* console.log('udp error'); */ reject(); });
       this.osc.open();
     });
   }
@@ -199,12 +199,10 @@ class Pd {
    */
   static async _startPdReceive() {
     return new Promise((resolve, reject) => {
-      console.log('spawning pdreceive');
       this.pdreceive = spawn(path.join(this.binFolder, 'pdreceive'), [`${this.pdreceivePort}`]);
 
       this.pdreceive.stdout.on('data', (data) => {
         if (`${data}` === 'initialized;\n') {
-          console.log('pdreceive ready');
           resolve();
         } else {
           this._routeMessage(data);
@@ -232,10 +230,10 @@ class Pd {
     const fullPath = this._createPatchWrapper(patchPath, id, ...args);
     const filedir = path.dirname(fullPath);
     const filename = path.basename(fullPath);
-    // this.patches[id] = new Patch(id, this.pdsend);
     this.patches[id] = new Patch(id, this);
     this.pdsend.stdin.write(`open ${filename} ${filedir};\n`);
-    this.on('message')
+    // todo ?
+    // this.patches[id].on('message', () => { /* receive load ack */ });
 
     return this.patches[id];
   }
