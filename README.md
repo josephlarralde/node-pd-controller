@@ -62,3 +62,5 @@ cd ..
 ## Caveats
 
 Sometimes, when pd-controller is initialized too many times in a short amount of time, the`pdsend` and `pdreceive` binaries cannot use the latest TCP port, maybe due to OS restrictions to prevent DDOS attacks. When this happens, the `Pd.init()` method tries to kill and respawn the binaries every 5 seconds until it succeeds (usually in less than 1 minute), then returns a resolved Promise.
+
+It also happened on a raspberry Pi zero that sending too many messages to pure data made the node server stop responding without displaying any errors. As the messages are sent to pure data via TCP by default, the ability to communicate alternatively via UDP (using OSC) was added to the library to avoid overflowing the TCP buffer (if that makes sense), which seemed to work. So for high bandwidth control messages such as real-time sensor data, it is advised to use `myPatch.sendUdp('message', value);` instead of `myPatch.send('message', value);` to avoid this inconvenience.
